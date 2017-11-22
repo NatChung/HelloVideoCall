@@ -11,6 +11,15 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <PushKit/PushKit.h>
+#import "RNVoipPushNotificationManager.h"
+
+@interface AppDelegate()<PKPushRegistryDelegate>
+{
+  PKPushRegistry * voipRegistry;
+}
+
+@end
 
 @implementation AppDelegate
 
@@ -31,7 +40,23 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  voipRegistry = [[PKPushRegistry alloc] initWithQueue: dispatch_get_main_queue()];
+  voipRegistry.delegate = self;
+  voipRegistry.desiredPushTypes = [NSSet setWithObject:PKPushTypeVoIP];
   return YES;
+}
+
+// Handle updated push credentials
+- (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(NSString *)type {
+  // Register VoIP push token (a property of PKPushCredentials) with server
+  [RNVoipPushNotificationManager didUpdatePushCredentials:credentials forType:(NSString *)type];
+}
+
+// Handle incoming pushes
+- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type {
+  // Process the received push
+  [RNVoipPushNotificationManager didReceiveIncomingPushWithPayload:payload forType:(NSString *)type];
 }
 
 @end

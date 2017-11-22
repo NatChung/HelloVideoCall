@@ -26,6 +26,7 @@
 		00FCD58B1FC42AAE00D71F57 /* libc.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 00FCD58A1FC42AAE00D71F57 /* libc.tbd */; };
 		00FCD58D1FC42ABA00D71F57 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 00FCD58C1FC42ABA00D71F57 /* libsqlite3.tbd */; };
 		00FCD58F1FC42ACD00D71F57 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 00FCD58E1FC42ACD00D71F57 /* libstdc++.tbd */; };
+		00FCD6E81FC5974800D71F57 /* PushKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00FCD6E71FC5974100D71F57 /* PushKit.framework */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
@@ -36,6 +37,7 @@
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		6925683233B34CCC9A8AF67C /* libRNVoipPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C9B11C30D6C43DA936C5022 /* libRNVoipPushNotification.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 /* End PBXBuildFile section */
@@ -152,6 +154,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 35A2221F1CB493700015FD5C;
 			remoteInfo = RCTWebRTC;
+		};
+		00FCD6E51FC5973100D71F57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D3ED2D8FE2F46C89975A459 /* RNVoipPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 23D512051CC765E500845BEE;
+			remoteInfo = RNVoipPushNotification;
 		};
 		139105C01AF99BAD00B5F7CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -338,6 +347,8 @@
 		00FCD58A1FC42AAE00D71F57 /* libc.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libc.tbd; path = usr/lib/libc.tbd; sourceTree = SDKROOT; };
 		00FCD58C1FC42ABA00D71F57 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		00FCD58E1FC42ACD00D71F57 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		00FCD6E71FC5974100D71F57 /* PushKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PushKit.framework; path = System/Library/Frameworks/PushKit.framework; sourceTree = SDKROOT; };
+		00FCD6E91FC5982F00D71F57 /* HelloVideoCall.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = HelloVideoCall.entitlements; path = HelloVideoCall/HelloVideoCall.entitlements; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* HelloVideoCall.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloVideoCall.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -348,6 +359,8 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = HelloVideoCall/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = HelloVideoCall/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		3D3ED2D8FE2F46C89975A459 /* RNVoipPushNotification.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVoipPushNotification.xcodeproj; path = "../node_modules/react-native-voip-push-notification/ios/RNVoipPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		4C9B11C30D6C43DA936C5022 /* libRNVoipPushNotification.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVoipPushNotification.a; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -367,6 +380,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00FCD6E81FC5974800D71F57 /* PushKit.framework in Frameworks */,
 				00FCD58D1FC42ABA00D71F57 /* libsqlite3.tbd in Frameworks */,
 				00FCD5891FC42AA200D71F57 /* VideoToolbox.framework in Frameworks */,
 				00FCD5871FC42A8B00D71F57 /* CoreVideo.framework in Frameworks */,
@@ -392,6 +406,7 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				00FCD58F1FC42ACD00D71F57 /* libstdc++.tbd in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
+				6925683233B34CCC9A8AF67C /* libRNVoipPushNotification.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,6 +483,7 @@
 		00FCD57A1FC429EE00D71F57 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				00FCD6E71FC5974100D71F57 /* PushKit.framework */,
 				00FCD58E1FC42ACD00D71F57 /* libstdc++.tbd */,
 				00FCD58C1FC42ABA00D71F57 /* libsqlite3.tbd */,
 				00FCD58A1FC42AAE00D71F57 /* libc.tbd */,
@@ -480,6 +496,22 @@
 				00FCD57C1FC42A0800D71F57 /* AVFoundation.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		00FCD6BD1FC5972E00D71F57 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				4C9B11C30D6C43DA936C5022 /* libRNVoipPushNotification.a */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		00FCD6E21FC5973000D71F57 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				00FCD6E61FC5973100D71F57 /* libRNVoipPushNotification.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		139105B71AF99BAD00B5F7CC /* Products */ = {
@@ -505,6 +537,7 @@
 		13B07FAE1A68108700A75B9A /* HelloVideoCall */ = {
 			isa = PBXGroup;
 			children = (
+				00FCD6E91FC5982F00D71F57 /* HelloVideoCall.entitlements */,
 				00FCD5751FC4286800D71F57 /* WebRTC.framework */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -572,6 +605,7 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
+				3D3ED2D8FE2F46C89975A459 /* RNVoipPushNotification.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -593,6 +627,7 @@
 				00E356EF1AD99517003FC87E /* HelloVideoCallTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				00FCD57A1FC429EE00D71F57 /* Frameworks */,
+				00FCD6BD1FC5972E00D71F57 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -663,7 +698,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 610;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -675,6 +710,14 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = WU5NMJH6RS;
 						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -741,6 +784,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = 00FCD6E21FC5973000D71F57 /* Products */;
+					ProjectRef = 3D3ED2D8FE2F46C89975A459 /* RNVoipPushNotification.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -855,6 +902,13 @@
 			fileType = archive.ar;
 			path = libRCTWebRTC.a;
 			remoteRef = 00FCD5731FC4285500D71F57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		00FCD6E61FC5973100D71F57 /* libRNVoipPushNotification.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNVoipPushNotification.a;
+			remoteRef = 00FCD6E51FC5973100D71F57 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		139105C11AF99BAD00B5F7CC /* libRCTSettings.a */ = {
@@ -1097,6 +1151,10 @@
 				INFOPLIST_FILE = HelloVideoCallTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1118,6 +1176,10 @@
 				INFOPLIST_FILE = HelloVideoCallTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1132,12 +1194,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = HelloVideoCall/HelloVideoCall.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = WU5NMJH6RS;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../node_modules/react-native-webrtc/ios/**";
+				HEADER_SEARCH_PATHS = " $(SRCROOT)/../node_modules/react-native-voip-push-notification/ios/RNVoipPushNotification/**";
 				INFOPLIST_FILE = HelloVideoCall/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../node_modules/react-native-webrtc/ios/**";
@@ -1158,11 +1222,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = HelloVideoCall/HelloVideoCall.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = WU5NMJH6RS;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../node_modules/react-native-webrtc/ios/**";
+				HEADER_SEARCH_PATHS = " $(SRCROOT)/../node_modules/react-native-voip-push-notification/ios/RNVoipPushNotification/**";
 				INFOPLIST_FILE = HelloVideoCall/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../node_modules/react-native-webrtc/ios/**";
