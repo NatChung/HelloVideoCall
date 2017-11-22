@@ -132,3 +132,9 @@ pc.onaddstream = (event) => {
   container.setState({ remoteURL: event.stream.toURL() });
 }
 ```
+
+## Voip push
+I Add react-native-voip-push-notification to project, 
+Note:
+1. Add "App provides Voice over IP services" to Required background modes
+2. Enable <my project>/Capabilities/Push Notifications
