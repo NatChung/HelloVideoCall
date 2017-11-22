@@ -36,7 +36,7 @@ socket.on('connect', () => {
 ### Join
 1. Socket emit join with single server address.
 ```javascript
-socket.emit('join', "natchung.starvedia.testroom", socketIds => { ... })
+socket.emit('join', "your room id", socketIds => { ... })
 ```
 2. Get socket ID from join callback and create PeerConnection and add local stream
 ```javascript
@@ -89,6 +89,44 @@ const exchange = data => {
 }
 ```
 5. Finally, we get the remote stream on add stream through peer connection the whole connection is done.
+```javascript
+pc.onaddstream = (event) => {
+  container.setState({ remoteURL: event.stream.toURL() });
+}
+```
+### Create and Wait
+1. socket emit join then get callback without any socket ID
+```javascript
+socket.emit('join', "your room id", socketIds => { ... })
+```
+
+2. We will get on change from the single server. 
+###### Create Peer Connection withou offer
+```javascript
+const pc = new RTCPeerConnection(configuration)
+```
+###### Exchange ICE candidate
+```javascript
+const exchange = data => {
+    if (data.candidate) {
+        console.log('exchange candidate:', data.candidate);
+        pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+    }
+}
+```
+###### Answer the offer
+```javascript
+const exchange = data => {
+    if (data.sdp) {
+        pc.setRemoteDescription(new RTCSessionDescription(data.sdp), () => {
+            console.log(`pc.remoteDescription.type: `, pc.remoteDescription.type)
+            if (pc.remoteDescription.type == "offer")
+                createAnswer(pc, fromId)
+        }, logError);
+    }
+}
+```
+3. Finally, we get the remote stream on add stream through peer connection the whole connection is done.
 ```javascript
 pc.onaddstream = (event) => {
   container.setState({ remoteURL: event.stream.toURL() });
