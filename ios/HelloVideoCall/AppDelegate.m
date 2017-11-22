@@ -13,10 +13,12 @@
 #import <React/RCTRootView.h>
 #import <PushKit/PushKit.h>
 #import "RNVoipPushNotificationManager.h"
+#import "RNCallKit.h"
 
 @interface AppDelegate()<PKPushRegistryDelegate>
 {
   PKPushRegistry * voipRegistry;
+  RNCallKit *rncallkit;
 }
 
 @end
@@ -27,12 +29,22 @@
 {
   NSURL *jsCodeLocation;
 
-  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+//  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+  jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                      moduleName:@"HelloVideoCall"
-                                               initialProperties:nil
-                                                   launchOptions:launchOptions];
+  rncallkit = [[RNCallKit alloc] init];
+  RCTBridge *bridge = [[RCTBridge alloc] initWithBundleURL:jsCodeLocation
+                                            moduleProvider:^{ return @[rncallkit]; }
+                                             launchOptions:launchOptions];
+  
+//  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+//                                                      moduleName:@"HelloVideoCall"
+//                                               initialProperties:nil
+//                                                   launchOptions:launchOptions];
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
+                                                   moduleName:@"HelloVideoCall"
+                                            initialProperties:nil];
+  
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -45,7 +57,7 @@
   voipRegistry.delegate = self;
   voipRegistry.desiredPushTypes = [NSSet setWithObject:PKPushTypeVoIP];
   
-  self.provider = [[ProviderDelegate alloc] init];
+//  self.provider = [[ProviderDelegate alloc] init];
   return YES;
 }
 
@@ -58,11 +70,20 @@
 // Handle incoming pushes
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type {
   // Process the received push
-  [self.provider displayIncomingCall:[NSUUID UUID] handle:@"Nat" hasVideo:YES withCompletion:^(NSError *error) {
-    if(error) NSLog(@"%@", error);
-  }];
+//  [self.provider displayIncomingCall:[NSUUID UUID] handle:@"Nat" hasVideo:YES withCompletion:^(NSError *error) {
+//    if(error) NSLog(@"%@", error);
+//  }];
   
   [RNVoipPushNotificationManager didReceiveIncomingPushWithPayload:payload forType:(NSString *)type];
+}
+
+- (BOOL)application:(UIApplication *)application
+continueUserActivity:(NSUserActivity *)userActivity
+ restorationHandler:(void(^)(NSArray * __nullable restorableObjects))restorationHandler
+{
+  return [RNCallKit application:application
+           continueUserActivity:userActivity
+             restorationHandler:restorationHandler];
 }
 
 @end
