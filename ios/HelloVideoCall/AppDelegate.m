@@ -44,6 +44,8 @@
   voipRegistry = [[PKPushRegistry alloc] initWithQueue: dispatch_get_main_queue()];
   voipRegistry.delegate = self;
   voipRegistry.desiredPushTypes = [NSSet setWithObject:PKPushTypeVoIP];
+  
+  self.provider = [[ProviderDelegate alloc] init];
   return YES;
 }
 
@@ -56,6 +58,10 @@
 // Handle incoming pushes
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type {
   // Process the received push
+  [self.provider displayIncomingCall:[NSUUID UUID] handle:@"Nat" hasVideo:YES withCompletion:^(NSError *error) {
+    if(error) NSLog(@"%@", error);
+  }];
+  
   [RNVoipPushNotificationManager didReceiveIncomingPushWithPayload:payload forType:(NSString *)type];
 }
 
