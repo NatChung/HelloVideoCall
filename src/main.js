@@ -38,8 +38,17 @@ const getStats = () => {
     if (pc.getRemoteStreams()[0] && pc.getRemoteStreams()[0].getAudioTracks()[0]) {
         const track = pc.getRemoteStreams()[0].getAudioTracks()[0];
         console.log('track', track);
-        pc.getStats(track,  (report) => console.log('getStats report', report), logError);
+        pc.getStats(track, (report) => console.log('getStats report', report), logError);
     }
+}
+
+const leave = socketId => {
+    console.log('leave', socketId);
+    const pc = pcPeers[socketId];
+    pc.close();
+    delete pcPeers[socketId];
+
+    container.setState({ remoteURL: null });
 }
 
 const exchange = data => {
@@ -170,7 +179,7 @@ const configuration = {
     "iceServers": [
         { url: "stun:stun.l.google.com:19302" },
         { url: 'stun:stun1.l.google.com:19302' },
-        { url: 'turn:numb.viagenie.ca', username: "nat@starvedia.com", credential: "starvedia" }
+        { url: 'turn:numb.viagenie.ca', username: "nat.chung1@gmail.com", credential: "2roixdui" }
     ]
 }
 
@@ -190,7 +199,11 @@ export default class main extends Component {
     }
 
     _onPress() {
-        console.log(`_onPress`)
+
+        for(let sid in pcPeers){
+            leave(sid)
+        }
+
         socket.emit('join', "0929522741", socketIds => {
             console.log(`socketIDs.length: ` + socketIds.length)
             for (const i in socketIds) {
@@ -202,42 +215,35 @@ export default class main extends Component {
 
     render() {
         return (
-            <RTCView streamURL={this.state.remoteURL} style={styles.peerView} >
-                <View style={styles.bottom}>
-                    <Button
-                        title="Learn More"
-                        color="#841584"
-                        accessibilityLabel="Learn more about this purple button"
-                        style={styles.button}
-                        onPress={this._onPress.bind(this)}
-                    />
-                    <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView} />
-                </View>
-            </RTCView>
+
+            <View style={{ flex: 1,  }}>
+                <RTCView streamURL={this.state.remoteURL} style={styles.peerView} />
+
+                <Button
+                    title="Learn More"
+                    color="#841584"
+                    accessibilityLabel="Learn more about this purple button"
+                    style={styles.button}
+                    onPress={this._onPress.bind(this)}
+                />
+
+                <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView} />
+            </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
 
-    bottom: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        height: 150
-    },
     button: {
-        alignSelf: 'flex-end',
-        backgroundColor: 'black'
     },
     peerView: {
         flex: 1,
-        flexDirection: 'column-reverse',
         backgroundColor: 'green'
-
     },
     selfView: {
         height: 140,
         width: 110,
-        marginBottom: 10
+        position: 'absolute'
     }
 });
