@@ -33,26 +33,34 @@ socket.on('connect', () => {
 
 const logError = err => console.log(err)
 
+const getStats = () => {
+    const pc = pcPeers[Object.keys(pcPeers)[0]];
+    if (pc.getRemoteStreams()[0] && pc.getRemoteStreams()[0].getAudioTracks()[0]) {
+        const track = pc.getRemoteStreams()[0].getAudioTracks()[0];
+        console.log('track', track);
+        pc.getStats(track,  (report) => console.log('getStats report', report), logError);
+    }
+}
+
 const exchange = data => {
     console.log(`on exchange data:`, data)
 
     const fromId = data.from;
     let pc;
     if (fromId in pcPeers) {
-        console.log(`get fromId from pcPeers`)
         pc = pcPeers[fromId];
     } else {
-        console.log(`Create a new one without offer`)
         pc = createPC(fromId, false);
     }
 
     if (data.sdp) {
-        pc.setRemoteDescription(new RTCSessionDescription(data.sdp), function () {
+        pc.setRemoteDescription(new RTCSessionDescription(data.sdp), () => {
+            console.log(`pc.remoteDescription.type: `, pc.remoteDescription.type)
             if (pc.remoteDescription.type == "offer")
-               createAnswer(pc, fromId)
+                createAnswer(pc, fromId)
         }, logError);
-    } 
-    
+    }
+
     if (data.candidate) {
         console.log('exchange candidate:', data.candidate);
         pc.addIceCandidate(new RTCIceCandidate(data.candidate));
@@ -97,9 +105,9 @@ const getLocalStream = (isFront, callback) => {
 }
 
 const createAnswer = (pc, fromId) => {
-    pc.createAnswer( desc => {
+    pc.createAnswer(desc => {
         console.log('createAnswer', desc);
-        pc.setLocalDescription(desc,  () => {
+        pc.setLocalDescription(desc, () => {
             console.log('setLocalDescription', pc.localDescription);
             socket.emit('exchange', { 'to': fromId, 'sdp': pc.localDescription });
         }, logError)
@@ -117,24 +125,26 @@ const createOffer = (pc, socketId) => {
 const createPC = (socketId, isOffer) => {
     console.log(`createPC socketId:`, socketId)
 
-    const pc = new RTCPeerConnection(configuration);
+    const pc = new RTCPeerConnection(configuration)
     pcPeers[socketId] = pc;
 
     pc.onicecandidate = (event) => {
-        console.log('onicecandidate :', event.candidate);
         if (event.candidate)
             socket.emit('exchange', { 'to': socketId, 'candidate': event.candidate })
     }
 
     pc.onnegotiationneeded = () => {
-        console.log('onnegotiationneeded');
+        console.log(`on negotiation needed`)
         if (isOffer) {
-          createOffer(pc, socketId);
+            createOffer(pc, socketId);
         }
     }
 
     pc.oniceconnectionstatechange = (event) => {
-        console.log(`oniceconnectionstatechange: `, event)
+        console.log('oniceconnectionstatechange', event.target.iceConnectionState)
+        if (event.target.iceConnectionState === 'completed') {
+            setTimeout(() => getStats(), 1000);
+        }
     }
 
     pc.onsignalingstatechange = (event) => {
@@ -142,12 +152,12 @@ const createPC = (socketId, isOffer) => {
     };
 
     pc.onaddstream = (event) => {
-        console.log('onaddstream', event.stream);
         container.setState({ remoteURL: event.stream.toURL() });
     }
 
     pc.onremovestream = (event) => {
         console.log('onremovestream', event.stream);
+        container.setState({ remoteURL: null });
     }
 
     pc.addStream(localStream)
@@ -180,9 +190,9 @@ export default class main extends Component {
     }
 
     _onPress() {
-        console.log(`onPress`)
-        socket.emit('join', "natchung.starvedia.testroom", socketIds => {
-            console.log(`onPress, socketIds.lenght:`, socketIds.length)
+        console.log(`_onPress`)
+        socket.emit('join', "0929522741", socketIds => {
+            console.log(`socketIDs.length: ` + socketIds.length)
             for (const i in socketIds) {
                 const socketId = socketIds[i];
                 createPC(socketId, true);
