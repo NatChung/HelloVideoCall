@@ -194,20 +194,29 @@ export default class main extends Component {
         videoURL: null,
         remoteURL: null,
         selfViewSrc: null,
-        peerViewSrc: null,
-        status: 'init',
-        roomID: ''
+        peerViewSrc: null
     }
 
     constructor(props) {
-        
         super(props)
-        // Initialise RNCallKit
+        if (Platform.OS === 'ios'){
+            this._initVoipNotification()
+            this._initRNCallkit()
+        }
+    }
+
+    _initVoipNotification(){
+        VoipPushNotification.requestPermissions(); // required 
+        VoipPushNotification.addEventListener('register', this.onVoipNotifcationRegister.bind(this))
+        VoipPushNotification.addEventListener('notification', this.onVoipNotifcation.bind(this));
+    }
+
+    _initRNCallkit(){
         let options = {
             appName: 'HelloVideoCall',
             imageName: 'video_call.png',
             ringtoneSound: 'Ringtone.caf',
-        };
+        }
         try {
             RNCallKit.setup(options);
         } catch (err) {
@@ -219,6 +228,18 @@ export default class main extends Component {
         RNCallKit.addEventListener('answerCall', this.onRNCallKitPerformAnswerCallAction);
         RNCallKit.addEventListener('endCall', this.onRNCallKitPerformEndCallAction);
         RNCallKit.addEventListener('didActivateAudioSession', this.onRNCallKitDidActivateAudioSession.bind(this));
+    }
+
+    onVoipNotifcationRegister(token) {
+        console.log(`got register from voip push, token: ` + token)
+    }
+
+    onVoipNotifcation(notification){
+        console.log(`got notification:`, notification)
+        this.onIncomingCall()
+        if (VoipPushNotification.wakeupByPush) {
+            VoipPushNotification.wakeupByPush = false;
+        }
     }
 
     onRNCallKitDidReceiveStartCallAction(data) {
@@ -288,41 +309,6 @@ export default class main extends Component {
         RNCallKit.endCall(_uuid)
     }
 
-    componentWillMount() { // or anywhere which is most comfortable and appropriate for you 
-        VoipPushNotification.requestPermissions(); // required 
-
-        VoipPushNotification.addEventListener('register', (token) => {
-            // send token to your apn provider server 
-            console.log(`got register from voip push, token: ` + token)
-        });
-
-        VoipPushNotification.addEventListener('notification', (notification) => {
-            // register your VoIP client, show local notification, etc. 
-            // e.g. 
-            //this.doRegister();
-
-            console.log(`got notification:`, notification)
-            this.onIncomingCall()
-
-            /* there is a boolean constant exported by this module called
-             * 
-             * wakeupByPush
-             * 
-             * you can use this constant to distinguish the app is launched
-             * by VoIP push notification or not
-             *
-             * e.g.
-             */
-            if (VoipPushNotification.wakeupByPush) {
-                // do something... 
-
-                // remember to set this static variable to false 
-                // since the constant are exported only at initialization time 
-                // and it will keep the same in the whole app 
-                VoipPushNotification.wakeupByPush = false;
-            }
-        });
-    }
 
     componentDidMount() {
         container = this
