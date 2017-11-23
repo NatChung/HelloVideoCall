@@ -133,8 +133,12 @@ pc.onaddstream = (event) => {
 }
 ```
 
-## Voip push
-I Add react-native-voip-push-notification to project, 
+## How to get VoIP push notification even app not open?
+Add react-native-voip-push-notification to project
 Note:
-1. Add "App provides Voice over IP services" to Required background modes
+1. Add "App provides Voice over IP services" to Required background modes in info.plist
 2. Enable <my project>/Capabilities/Push Notifications
+3. Package the main.jsbundle and using it to offline bundle in iOS then we can get push notification event app not open.
+
+## How to connect WebRTC audio session in Callkit? 
+Basically is activate our session after callkit activated audio session. 
