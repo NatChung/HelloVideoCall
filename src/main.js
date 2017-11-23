@@ -218,19 +218,21 @@ export default class main extends Component {
         RNCallKit.addEventListener('didReceiveStartCallAction', this.onRNCallKitDidReceiveStartCallAction);
         RNCallKit.addEventListener('answerCall', this.onRNCallKitPerformAnswerCallAction);
         RNCallKit.addEventListener('endCall', this.onRNCallKitPerformEndCallAction);
-        RNCallKit.addEventListener('didActivateAudioSession', this.onRNCallKitDidActivateAudioSession);
+        RNCallKit.addEventListener('didActivateAudioSession', this.onRNCallKitDidActivateAudioSession.bind(this));
     }
 
     onRNCallKitDidReceiveStartCallAction(data) {
         /*
          * Your normal start call action
          *
-         * ...
+         * ... 
          *
          */
 
         let _uuid = uuid.v4();
         RNCallKit.startCall(_uuid, data.handle);
+
+        console.log(`onRNCallKitDidReceiveStartCallAction`)
     }
 
     onRNCallKitPerformAnswerCallAction(data) {
@@ -240,6 +242,7 @@ export default class main extends Component {
          *
          * e.g. this.handleAnswerCall(data.callUUID);
          */
+        console.log(`onRNCallKitPerformAnswerCallAction`)
     }
 
     onRNCallKitPerformEndCallAction(data) {
@@ -249,6 +252,7 @@ export default class main extends Component {
          *
          * e.g. this.handleHangUpCall(data.callUUID);
          */
+        console.log(`onRNCallKitPerformEndCallAction`)
     }
 
     onRNCallKitDidActivateAudioSession(data) {
@@ -257,6 +261,9 @@ export default class main extends Component {
          *
          * - Start playing ringback if it is an outgoing call
          */
+        
+        console.log(`onRNCallKitDidActivateAudioSession`)
+        this._onPress();
     }
 
     // This is a fake function where you can receive incoming call notifications
@@ -314,19 +321,6 @@ export default class main extends Component {
                 // and it will keep the same in the whole app 
                 VoipPushNotification.wakeupByPush = false;
             }
-
-            /**
-             * Local Notification Payload
-             *
-             * - `alertBody` : The message displayed in the notification alert.
-             * - `alertAction` : The "action" displayed beneath an actionable notification. Defaults to "view";
-             * - `soundName` : The sound played when the notification is fired (optional).
-             * - `category`  : The category of this notification, required for actionable notifications (optional).
-             * - `userInfo`  : An optional object containing additional notification data.
-             */
-            VoipPushNotification.presentLocalNotification({
-                alertBody: "hello! " + notification.getMessage()
-            });
         });
     }
 
