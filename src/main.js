@@ -3,6 +3,7 @@ import io from 'socket.io-client'
 import VoipPushNotification from 'react-native-voip-push-notification'
 import RNCallKit from 'react-native-callkit'
 import uuid from 'uuid'
+import FCM from 'react-native-fcm';
 
 import {
     Platform,
@@ -32,7 +33,7 @@ socket.on('leave', socketId => leave(socketId))
 socket.on('connect', () => {
     getLocalStream(true, stream => {
         localStream = stream;
-        container.setState({ selfViewSrc: stream.toURL() });
+        //container.setState({ selfViewSrc: stream.toURL() });
     });
 })
 
@@ -188,6 +189,7 @@ const configuration = {
     ]
 }
 
+let opened = false;
 export default class main extends Component {
 
     state = {
@@ -199,19 +201,19 @@ export default class main extends Component {
 
     constructor(props) {
         super(props)
-        if (Platform.OS === 'ios'){
+        if (Platform.OS === 'ios') {
             this._initVoipNotification()
             this._initRNCallkit()
         }
     }
 
-    _initVoipNotification(){
+    _initVoipNotification() {
         VoipPushNotification.requestPermissions(); // required 
         VoipPushNotification.addEventListener('register', this.onVoipNotifcationRegister.bind(this))
         VoipPushNotification.addEventListener('notification', this.onVoipNotifcation.bind(this));
     }
 
-    _initRNCallkit(){
+    _initRNCallkit() {
         let options = {
             appName: 'HelloVideoCall',
             imageName: 'video_call.png',
@@ -234,7 +236,7 @@ export default class main extends Component {
         console.log(`got register from voip push, token: ` + token)
     }
 
-    onVoipNotifcation(notification){
+    onVoipNotifcation(notification) {
         console.log(`got notification:`, notification)
         this.onIncomingCall()
         if (VoipPushNotification.wakeupByPush) {
@@ -282,7 +284,7 @@ export default class main extends Component {
          *
          * - Start playing ringback if it is an outgoing call
          */
-        
+
         console.log(`onRNCallKitDidActivateAudioSession`)
         this._onPress();
     }
@@ -309,24 +311,38 @@ export default class main extends Component {
         RNCallKit.endCall(_uuid)
     }
 
+    componentWillUnmount() {
+        // stop listening for events
+        this.notificationListener.remove();
+    }
 
     componentDidMount() {
         container = this
-    }
+
+        if(Platform.OS ==='ios')
+            return
+
+        FCM.requestPermissions().then(()=>console.log('granted')).catch(()=>console.log('notification permission rejected'));
+        FCM.getFCMToken().then(token => {
+            console.log(token)
+        })
+    } 
 
     _onPress() {
 
-        for (let sid in pcPeers) {
-            leave(sid)
-        }
+        
 
-        socket.emit('join', "0929522741", socketIds => {
-            console.log(`socketIDs.length: ` + socketIds.length)
-            for (const i in socketIds) {
-                const socketId = socketIds[i];
-                createPC(socketId, true);
-            }
-        })
+        // for (let sid in pcPeers) {
+        //     leave(sid)
+        // }
+
+        // socket.emit('join', "0929522741", socketIds => {
+        //     console.log(`socketIDs.length: ` + socketIds.length)
+        //     for (const i in socketIds) {
+        //         const socketId = socketIds[i];
+        //         createPC(socketId, true);
+        //     }
+        // })
     }
 
     render() {

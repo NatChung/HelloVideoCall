@@ -3,6 +3,7 @@ package com.hellovideocall;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.evollu.react.fcm.FIRMessagingPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -24,7 +25,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new WebRTCModulePackage(),
-        new MainReactPackage()
+        new MainReactPackage(),
+            new FIRMessagingPackage()
       );
     }
 
