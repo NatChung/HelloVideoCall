@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "606188391974",
+    "firebase_url": "https://hellovideocall.firebaseio.com",
+    "project_id": "hellovideocall",
+    "storage_bucket": "hellovideocall.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606188391974:android:67e0a8ab660dc257",
+        "android_client_info": {
+          "package_name": "com.hellovideocall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606188391974-ggikn5o148vang27a1n2lpf8au44jcav.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hellovideocall",
+            "certificate_hash": "a1030a00846a0990e742985d15fc05e3b32844ed"
+          }
+        },
+        {
+          "client_id": "606188391974-fo3sctkfvmvp88cf1vlrlss7eif151d3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJjpS8eYDQDOgk78SXfSE0I72lUumwyJs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606188391974-fo3sctkfvmvp88cf1vlrlss7eif151d3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
