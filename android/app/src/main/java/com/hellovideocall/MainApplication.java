@@ -8,6 +8,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.hellovideocall.RNModule.ActivityStarterReactPackage;
 import com.oney.WebRTCModule.WebRTCModulePackage;
 
 import java.util.Arrays;
@@ -24,9 +25,10 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-        new WebRTCModulePackage(),
-        new MainReactPackage(),
-            new FIRMessagingPackage()
+              new WebRTCModulePackage(),
+              new MainReactPackage(),
+              new FIRMessagingPackage(),
+              new ActivityStarterReactPackage()
       );
     }
 
