@@ -27,13 +27,15 @@ const getImage = (state) => {
     }
 }
 
+const videoView = (remoteURL) => {
+    return (remoteURL) ? <RTCView streamURL={remoteURL} style={styles.peerView} /> : <View style={styles.peerView}/>
+}
+
 export default class main extends Component {
 
     state = {
         videoURL: null,
         remoteURL: null,
-        selfViewSrc: null,
-        peerViewSrc: null,
         webrtcHandler: new WebRTCHandler(this._setupSelfUrl.bind(this)),
         callStatus: 'none',//calling, none, waiting,
         uuid: null
@@ -41,7 +43,6 @@ export default class main extends Component {
 
     _setupSelfUrl(streamUrl) {
         console.log(`Setup Done`)
-        this.setState({ selfViewSrc: streamUrl })
     }
 
     constructor(props) {
@@ -118,11 +119,6 @@ export default class main extends Component {
 
     componentDidMount() {
         container = this
-
-        if (Platform.OS === 'ios')
-            return
-
-        this.setState({ selfViewSrc: this.state.webrtcHandler.localStream })
     }
 
     _onPress() {
@@ -138,8 +134,10 @@ export default class main extends Component {
                 break;
 
             case 'calling':
-                this.setState({ callStatus: 'none' })
-                this.state.webrtcHandler.disconnect()
+                this.setState({ callStatus: 'waiting'})
+                this.state.webrtcHandler.disconnect( () => {
+                    this.setState({ callStatus: 'none', remoteURL: null})
+                })
                 RNCallKit.endCall(this.state.uuid)
 
                 break;
@@ -159,8 +157,7 @@ export default class main extends Component {
                 <View style={styles.container}>
                     <Toolbar />
                     <Image source={require('./background.png')} style={styles.backgroundImage} />
-                    <RTCView streamURL={this.state.remoteURL} style={styles.peerView} />
-
+                    {videoView(this.state.remoteURL)}
                     <View style={styles.controller}>
                         <TouchableOpacity onPress={this._onPress.bind(this)}>
                             <Image style={styles.button} source={getImage(this.state.callStatus)} />

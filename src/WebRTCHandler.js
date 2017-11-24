@@ -70,6 +70,7 @@ export default class WebRTCHandler {
         console.log('leave', socketId);
         const pc = this._pcPeers[socketId];
         if(pc){
+            console.log(`close pc`)
             pc.close();
             delete this._pcPeers[socketId];
         }
@@ -103,7 +104,9 @@ export default class WebRTCHandler {
     }
 
     _peerOnIceConnectionStateChange(event){
-        console.log('oniceconnectionstatechange', event.target.iceConnectionState)
+        if(event.target.iceConnectionState === 'closed'){
+            this._callback.onDisconnected()
+        }
     }
 
     _peerOnSignalingStatechange(event){
@@ -121,7 +124,6 @@ export default class WebRTCHandler {
 
     _peerOnRemoveStream(event){
         console.log('onremovestream', event.stream);
-        this._callback.onDisconnected(event.stream.toURL())
     }
 
 
@@ -169,7 +171,8 @@ export default class WebRTCHandler {
         })
     }
 
-    disconnect(){
+    disconnect(onDisconnected){
+        this._callback.onDisconnected = onDisconnected
         for( socketId in this._pcPeers){
             this._socketOnLeave(socketId)
         }
