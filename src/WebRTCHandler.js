@@ -26,7 +26,7 @@ export default class WebRTCHandler {
         this.localStream = null
         this._pcPeers = {}
     
-        this._socket = io.connect('https://08bf2392.ngrok.io', { transports: ['websocket'] });
+        this._socket = io.connect('https://b563889e.ngrok.io', { transports: ['websocket'] });
         this._socket.on('exchange', this._socketOnExchange.bind(this))
         this._socket.on('leave', this._socketOnLeave.bind(this))
         this._socket.on('connect', this._socketOnConnect.bind(this))
@@ -69,8 +69,10 @@ export default class WebRTCHandler {
 
         console.log('leave', socketId);
         const pc = this._pcPeers[socketId];
-        pc.close();
-        delete this._pcPeers[socketId];
+        if(pc){
+            pc.close();
+            delete this._pcPeers[socketId];
+        }
     }
 
     _socketOnConnect() {
@@ -165,5 +167,11 @@ export default class WebRTCHandler {
                 this._createPC(socketId, true);
             }
         })
+    }
+
+    disconnect(){
+        for( socketId in this._pcPeers){
+            this._socketOnLeave(socketId)
+        }
     }
 }
