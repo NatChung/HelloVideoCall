@@ -152,9 +152,8 @@ export default class main extends Component {
     render() {
         return (
             <ThemeProvider uiTheme={uiTheme}>
-                <StatusBar backgroundColor="#396CD2" barStyle="light-content" />
-
                 <View style={styles.container}>
+                <StatusBar backgroundColor="#396CD2" barStyle="light-content" />
                     <Toolbar />
                     <Image source={require('./background.png')} style={styles.backgroundImage} />
                     {videoView(this.state.remoteURL)}
@@ -163,7 +162,6 @@ export default class main extends Component {
                             <Image style={styles.button} source={getImage(this.state.callStatus)} />
                         </TouchableOpacity>
                     </View>
-
                 </View>
             </ThemeProvider>
         )

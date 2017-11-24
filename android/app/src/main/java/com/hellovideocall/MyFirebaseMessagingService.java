@@ -2,6 +2,7 @@ package com.hellovideocall;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -16,6 +17,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @SuppressLint("WrongConstant")
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
+        MainActivity.FromPush = true;
+
         Intent alarmIntent = new Intent("android.intent.action.MAIN");
         alarmIntent.setClass(this, MainActivity.class);
         alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

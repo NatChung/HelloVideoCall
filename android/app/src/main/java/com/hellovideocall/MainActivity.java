@@ -11,9 +11,15 @@ import com.facebook.react.ReactActivity;
 
 public class MainActivity extends ReactActivity {
 
+    public static boolean FromPush = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
 
         KeyguardManager.KeyguardLock lock = ((KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE)).newKeyguardLock(KEYGUARD_SERVICE);
         PowerManager powerManager = ((PowerManager) getSystemService(Context.POWER_SERVICE));
