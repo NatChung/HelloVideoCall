@@ -35,7 +35,8 @@ export default class main extends Component {
         selfViewSrc: null,
         peerViewSrc: null,
         webrtcHandler: new WebRTCHandler(this._setupSelfUrl.bind(this)),
-        callStatus: 'none'//calling, none, waiting
+        callStatus: 'none',//calling, none, waiting,
+        uuid: null
     }
 
     _setupSelfUrl(streamUrl) {
@@ -63,6 +64,7 @@ export default class main extends Component {
             appName: 'HelloVideoCall',
             imageName: 'video_call.png',
             ringtoneSound: 'Ringtone.caf',
+            uuid:null,
         }
         try {
             RNCallKit.setup(options);
@@ -71,9 +73,9 @@ export default class main extends Component {
         }
 
         // Add RNCallKit Events
-        RNCallKit.addEventListener('didReceiveStartCallAction', this.onRNCallKitDidReceiveStartCallAction);
-        RNCallKit.addEventListener('answerCall', this.onRNCallKitPerformAnswerCallAction);
-        RNCallKit.addEventListener('endCall', this.onRNCallKitPerformEndCallAction);
+        RNCallKit.addEventListener('didReceiveStartCallAction', this.onRNCallKitDidReceiveStartCallAction.bind(this));
+        RNCallKit.addEventListener('answerCall', this.onRNCallKitPerformAnswerCallAction.bind(this));
+        RNCallKit.addEventListener('endCall', this.onRNCallKitPerformEndCallAction.bind(this));
         RNCallKit.addEventListener('didActivateAudioSession', this.onRNCallKitDidActivateAudioSession.bind(this));
     }
 
@@ -82,76 +84,31 @@ export default class main extends Component {
     }
 
     onVoipNotifcation(notification) {
-        console.log(`got notification:`, notification)
+        console.log(`onVoipNotifcation`)
         this.onIncomingCall()
-        if (VoipPushNotification.wakeupByPush) {
-            VoipPushNotification.wakeupByPush = false;
-        }
     }
 
     onRNCallKitDidReceiveStartCallAction(data) {
-        /*
-         * Your normal start call action
-         *
-         * ... 
-         *
-         */
-
-        let _uuid = uuid.v4();
-        RNCallKit.startCall(_uuid, data.handle);
-
         console.log(`onRNCallKitDidReceiveStartCallAction`)
     }
 
     onRNCallKitPerformAnswerCallAction(data) {
-        /* You will get this event when the user answer the incoming call
-         *
-         * Try to do your normal Answering actions here
-         *
-         * e.g. this.handleAnswerCall(data.callUUID);
-         */
         console.log(`onRNCallKitPerformAnswerCallAction`)
     }
 
     onRNCallKitPerformEndCallAction(data) {
-        /* You will get this event when the user finish the incoming/outgoing call
-         *
-         * Try to do your normal Hang Up actions here
-         *
-         * e.g. this.handleHangUpCall(data.callUUID);
-         */
         console.log(`onRNCallKitPerformEndCallAction`)
     }
 
     onRNCallKitDidActivateAudioSession(data) {
-        /* You will get this event when the the AudioSession has been activated by **RNCallKit**,
-         * you might want to do following things when receiving this event:
-         *
-         * - Start playing ringback if it is an outgoing call
-         */
-
         console.log(`onRNCallKitDidActivateAudioSession`)
         this._onPress();
     }
 
-    // This is a fake function where you can receive incoming call notifications
     onIncomingCall() {
-        // Store the generated uuid somewhere
-        // You will need this when calling RNCallKit.endCall()
-        let _uuid = uuid.v4();
-        RNCallKit.displayIncomingCall(_uuid, "886900000000", "number", true)
-    }
-
-    // This is a fake function where you make outgoing calls
-    onOutgoingCall() {
-        let _uuid = uuid.v4();
-        RNCallKit.startCall(_uuid, "886900000000")
-    }
-
-    // This is a fake function where you hang up calls
-    onHangUpCall() {
-        // get the _uuid you stored earlier
-        RNCallKit.endCall(_uuid)
+        this.setState({uuid:uuid.v4()})
+        console.log(`incomming, `, this.state.uuid)
+        RNCallKit.displayIncomingCall(this.state.uuid, "LucasHuang", "number", true)
     }
 
     componentWillUnmount() {
@@ -172,7 +129,7 @@ export default class main extends Component {
 
         switch (this.state.callStatus) {
             case 'none':
-                this.setState({ callStatus: 'waiting' })
+                this.setState({ callStatus: 'waiting'})
                 this.state.webrtcHandler.connect('0929522741', (error, streamUrl) => {
                     container.setState({ remoteURL: streamUrl });
                     this.setState({ callStatus: 'calling' })
@@ -183,6 +140,7 @@ export default class main extends Component {
             case 'calling':
                 this.setState({ callStatus: 'none' })
                 this.state.webrtcHandler.disconnect()
+                RNCallKit.endCall(this.state.uuid)
 
                 break;
 
@@ -205,9 +163,7 @@ export default class main extends Component {
 
                     <View style={styles.controller}>
                         <TouchableOpacity onPress={this._onPress.bind(this)}>
-                            <Image style={styles.button}
-                                source={getImage(this.state.callStatus)}
-                            />
+                            <Image style={styles.button} source={getImage(this.state.callStatus)} />
                         </TouchableOpacity>
                     </View>
 
@@ -255,8 +211,8 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        width: 100,
-        height: 100,
+        width: 120,
+        height: 120,
         alignSelf: 'center'
     }
 
