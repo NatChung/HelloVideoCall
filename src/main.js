@@ -5,6 +5,7 @@ import uuid from 'uuid'
 import WebRTCHandler from './WebRTCHandler'
 import { RTCView } from 'react-native-webrtc'
 import { Toolbar, COLOR, ThemeProvider } from 'react-native-material-ui'
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 import {
     Platform,
     StyleSheet,
@@ -28,8 +29,56 @@ const getImage = (state) => {
 }
 
 const videoView = (remoteURL) => {
-    return (remoteURL) ? <RTCView streamURL={remoteURL} style={styles.peerView} /> : <View style={styles.peerView}/>
+    return (remoteURL) ? <RTCView streamURL={remoteURL} style={styles.peerView} /> : <View style={styles.peerView} />
 }
+
+const LiveView = (props) => (
+    <View style={styles.container}>
+    <StatusBar backgroundColor="#396CD2" barStyle="light-content" />
+        <Toolbar />
+        <Image source={require('./background.png')} style={styles.backgroundImage} />
+        {videoView(props.remoteURL)}
+        <View style={styles.controller}>
+            <TouchableOpacity onPress={props.onClick}>
+                <Image style={styles.button} source={getImage(props.callStatus)} />
+            </TouchableOpacity>
+        </View>
+    </View>
+)
+
+const InCommingView = (props) => (
+    <View style={{
+        flexDirection: 'column-reverse',
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height + 30
+    }}>
+        <Image source={require('./incomming_background.png')} style={{
+            position: 'absolute',
+            width: Dimensions.get('window').width,
+            height: Dimensions.get('window').height + 30
+        }} />
+
+
+        <StatusBar backgroundColor="#000000" barStyle="light-content" />
+
+        <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            width: Dimensions.get('window').width,
+            height: 180
+        }} >
+            <TouchableOpacity onPress={props.onReject}>
+                <Image style={styles.inCommingCallButton} source={require('./endcall.png')} />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={props.onAnswer}>
+                <Image style={styles.inCommingCallButton} source={require('./startcall.png')} />
+            </TouchableOpacity>
+
+        </View>
+
+    </View>
+)
 
 export default class main extends Component {
 
@@ -38,7 +87,8 @@ export default class main extends Component {
         remoteURL: null,
         webrtcHandler: new WebRTCHandler(this._setupSelfUrl.bind(this)),
         callStatus: 'none',//calling, none, waiting,
-        uuid: null
+        uuid: null,
+        viewType: 'incomming', //live, incoming
     }
 
     _setupSelfUrl(streamUrl) {
@@ -65,7 +115,7 @@ export default class main extends Component {
             appName: 'HelloVideoCall',
             imageName: 'video_call.png',
             ringtoneSound: 'Ringtone.caf',
-            uuid:null,
+            uuid: null,
         }
         try {
             RNCallKit.setup(options);
@@ -107,7 +157,7 @@ export default class main extends Component {
     }
 
     onIncomingCall() {
-        this.setState({uuid:uuid.v4()})
+        this.setState({ uuid: uuid.v4() })
         console.log(`incomming, `, this.state.uuid)
         RNCallKit.displayIncomingCall(this.state.uuid, "LucasHuang", "number", true)
     }
@@ -119,13 +169,34 @@ export default class main extends Component {
 
     componentDidMount() {
         container = this
+        container._onPress()
+
+        if(Platform.OS === 'ios') return
+
+        FCM.requestPermissions().then(()=>console.log('granted')).catch(()=>console.log('notification permission rejected'));
+        
+        FCM.getFCMToken().then(token => {
+            console.log(token)
+            // store fcm token in your server
+        });
+        
+        this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
+            // optional, do some component related stuff
+        });
+        
+        // initial notification contains the notification that launchs the app. If user launchs app by clicking banner, the banner notification info will be here rather than through FCM.on event
+        // sometimes Android kills activity when app goes to background, and when resume it broadcasts notification before JS is run. You can use FCM.getInitialNotification() to capture those missed events.
+        // initial notification will be triggered all the time even when open app by icon so send some action identifier when you send notification
+        FCM.getInitialNotification().then(notif => {
+           console.log(notif)
+        });
     }
 
     _onPress() {
 
         switch (this.state.callStatus) {
             case 'none':
-                this.setState({ callStatus: 'waiting'})
+                this.setState({ callStatus: 'waiting' })
                 this.state.webrtcHandler.connect('0929522741', (error, streamUrl) => {
                     container.setState({ remoteURL: streamUrl });
                     this.setState({ callStatus: 'calling' })
@@ -134,9 +205,9 @@ export default class main extends Component {
                 break;
 
             case 'calling':
-                this.setState({ callStatus: 'waiting'})
-                this.state.webrtcHandler.disconnect( () => {
-                    this.setState({ callStatus: 'none', remoteURL: null})
+                this.setState({ callStatus: 'waiting' })
+                this.state.webrtcHandler.disconnect(() => {
+                    this.setState({ callStatus: 'none', remoteURL: null })
                 })
                 RNCallKit.endCall(this.state.uuid)
 
@@ -145,24 +216,31 @@ export default class main extends Component {
             default:
                 break;
         }
+    }
 
+    _onReject(){
+        this.setState({viewType:'live'})
+    }
 
+    _onAnswer(){
+        console.log(`onAnswer`)
+        this.setState({viewType:'live'})
+        // this._onPress.bind(this)
+        // this._onPress()
     }
 
     render() {
         return (
             <ThemeProvider uiTheme={uiTheme}>
-                <View style={styles.container}>
-                <StatusBar backgroundColor="#396CD2" barStyle="light-content" />
-                    <Toolbar />
-                    <Image source={require('./background.png')} style={styles.backgroundImage} />
-                    {videoView(this.state.remoteURL)}
-                    <View style={styles.controller}>
-                        <TouchableOpacity onPress={this._onPress.bind(this)}>
-                            <Image style={styles.button} source={getImage(this.state.callStatus)} />
-                        </TouchableOpacity>
-                    </View>
-                </View>
+            {(this.state.viewType === 'live') ? 
+            <LiveView 
+                remoteURL={this.state.remoteURL} 
+                onClick={this._onPress.bind(this)} 
+                callStatus={this.state.callStatus} /> 
+                : 
+                <InCommingView 
+                onAnswer={this._onAnswer.bind(this)} 
+                onReject={this._onReject.bind(this)} />}
             </ThemeProvider>
         )
     }
@@ -208,6 +286,12 @@ const styles = StyleSheet.create({
     button: {
         width: 120,
         height: 120,
+        alignSelf: 'center'
+    },
+
+    inCommingCallButton: {
+        width: 90,
+        height: 90,
         alignSelf: 'center'
     }
 
