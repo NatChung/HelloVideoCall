@@ -142,3 +142,6 @@ Note:
 
 ## How to connect WebRTC audio session in Callkit? 
 Basically is activate our session after callkit activated audio session. 
+
+## FCM
+FCM allow user using https to send push , but it will need key, the key in settting ,here is a colud message api key. 
